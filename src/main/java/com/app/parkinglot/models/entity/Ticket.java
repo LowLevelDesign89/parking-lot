@@ -3,8 +3,6 @@ package com.app.parkinglot.models.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.math.BigDecimal;
-
 @Data
 @Entity
 public class Ticket {
@@ -16,5 +14,7 @@ public class Ticket {
     private ParkingSpot parkingSpot;
     private Long entryTime;
     private Long exitTime;
-    private BigDecimal price;
+
+    @OneToOne
+    private Payment payment;
 }
