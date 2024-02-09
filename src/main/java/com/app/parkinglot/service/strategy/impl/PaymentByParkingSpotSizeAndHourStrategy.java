@@ -1,14 +1,15 @@
 package com.app.parkinglot.service.strategy.impl;
 
-import com.app.parkinglot.models.entity.ParkingSpot;
 import com.app.parkinglot.models.entity.Ticket;
 import com.app.parkinglot.models.enums.Size;
 import com.app.parkinglot.service.strategy.PaymentStrategy;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
 @Service
+@Slf4j
 public class PaymentByParkingSpotSizeAndHourStrategy implements PaymentStrategy {
     private final BigDecimal largeSpotPerHour = BigDecimal.valueOf(200);
     private final BigDecimal mediumSpotPerHour = BigDecimal.valueOf(150);
@@ -17,6 +18,7 @@ public class PaymentByParkingSpotSizeAndHourStrategy implements PaymentStrategy 
 
     @Override
     public void calculatePayment(Ticket ticket) {
+        log.info("price calculation started for ticket: {}", ticket);
         BigDecimal finalPrice = null;
         if(ticket.getParkingSpot().getParkingSpotSize().equals(Size.LARGE)) {
             finalPrice = largeSpotPerHour;
@@ -28,6 +30,7 @@ public class PaymentByParkingSpotSizeAndHourStrategy implements PaymentStrategy 
 
         float totalTimeElapsed =(float) ((ticket.getExitTime() - ticket.getEntryTime()) / (1000.0 * 3600));
         finalPrice = finalPrice.multiply(BigDecimal.valueOf(totalTimeElapsed));
+        log.info("final price for the parkingSpot: {} is {}", ticket.getParkingSpot(), finalPrice);
         ticket.getPayment().setPrice(finalPrice);
     }
 }

@@ -9,11 +9,13 @@ import com.app.parkinglot.service.AddressService;
 import com.app.parkinglot.service.ParkingLotAttributeBuilder;
 import com.app.parkinglot.service.ParkingLotService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@Slf4j
 @AllArgsConstructor
 public class ParkingLotServiceImpl implements ParkingLotService {
     private ParkingLotAttributeBuilder parkingLotAttributeBuilder;
@@ -23,12 +25,13 @@ public class ParkingLotServiceImpl implements ParkingLotService {
 
     @Override
     public ParkingLotResponseDTO createParkingLot(ParkingLotDTO parkingLotDTO) {
+        log.info("Parking lot creation started: {}", parkingLotDTO);
         ParkingLot parkingLot = new ParkingLot();
         parkingLot.setDescription(parkingLotDTO.getDescription());
         parkingLot.setAddress(addressService.getAddress(parkingLotDTO.getParkingLotAddressId()));
         parkingLot.setParkingFloors(parkingLotAttributeBuilder.buildParkingFloors(parkingLotDTO));
         parkingLotRepository.save(parkingLot);
-
+        log.info("creation of parking lot finished: {}", parkingLot);
         return ParkingLot.to(parkingLot);
        // return parkingLot;
     }
